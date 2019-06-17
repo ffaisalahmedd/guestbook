@@ -4,14 +4,14 @@ steps:
   entrypoint: 'bash'
   args: [
    '-c',
-   'docker pull gcr.io/project-kubernetes-242705/welcome:latest || exit 0'
+   'docker pull gcr.io/project-kubernetes-242705/guestbook:latest || exit 0'
   ]
 #step 2
 - name: 'gcr.io/cloud-builders/docker'
   args: [
    'build',
    '-t',
-   'gcr.io/project-kubernetes-242705/welcome:$BRANCH_NAME-$COMMIT_SHA',
+   'gcr.io/project-kubernetes-242705/guestbook:$BRANCH_NAME-$COMMIT_SHA',
    '.'
   ]
 #step 3
@@ -19,20 +19,20 @@ steps:
   args: ['apply', '-f', 'k8s/']
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=poc-cluster'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=guestbook'
 #step 4
 - name: 'gcr.io/cloud-builders/kubectl'
   args: [
    'set',
    'image',
    'deployment',
-   'welcome-app',
-   'welcome-app=gcr.io/project-kubernetes-242705/welcome:$BRANCH_NAME-$COMMIT_SHA'
+   'guestbook',
+   'guestbook=gcr.io/project-kubernetes-242705/guestbook:$BRANCH_NAME-$COMMIT_SHA'
   ]
   env:
-  - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=poc-cluster'
+  - 'CLOUDSDK_COMPUTE_ZONE=asia-south1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=guestbook'
 # push images to Google Container Registry with tags
 images: [
-   'gcr.io/project-kubernetes-242705/welcome:$BRANCH_NAME-$COMMIT_SHA',
+   'gcr.io/project-kubernetes-242705/guestbook:$BRANCH_NAME-$COMMIT_SHA',
   ]
